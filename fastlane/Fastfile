@@ -1,0 +1,143 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Create App Identifier if not already in App Store Connect"
+  lane :create_app_identifier_and_add_app_to_connect do
+    begin
+      produce(
+        app_identifier: "com.dhuntleyinc.baseafmapp",
+        app_name: "Base AFM App",
+        sku: "baseafmapp001",
+        platform: "ios",
+        language: "en-US",
+        team_id: ENV['APPLE_TEAM_ID'],
+        username: ENV['FASTLANE_USER'],
+        skip_itc: false,
+        skip_devcenter: false
+      )
+      UI.success("App Identifier successfully created and added to App Store Connect!")
+    rescue => e
+      UI.message("App might already exist. Skipping creation. Error: #{e.message}")
+    end
+  end
+
+  desc "Submit to App Store"
+  lane :submit_to_app_store do
+    sh("npx eas submit -p ios --profile production --latest")
+  end
+
+  desc "Build and Submit App using EAS and Fastlane"
+  lane :deploy do
+    UI.message("Starting the deployment process...")
+    create_app_identifier_and_add_app_to_connect
+    # sync_certificates_and_profiles
+    sh("npx eas build -p ios --profile production --auto-submit")
+    submit_to_app_store
+    UI.success("App successfully submitted to the App Store!")
+  end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# default_platform(:ios)
+
+# platform :ios do
+
+#   # Configure export compliance and other settings in App Store Connect
+#   desc "Configure export compliance and other settings in App Store Connect"
+#   lane :configure_app_settings do
+#     # Fetch the app using Spaceship
+#     app = Spaceship::ConnectAPI::App.find("com.dhuntleyinc.baseafmapp")
+    
+#     # Check if the app was found
+#     if app
+#       UI.message("App found: #{app.name}")
+      
+#       # Update export compliance settings
+#       app.update_export_compliance(
+#         uses_encryption: false,
+#         encryption_updated: false,
+#         is_exempt: true,
+#         contains_proprietary_cryptography: false,
+#         contains_third_party_cryptography: false,
+#         available_on_french_store: false
+#       )
+      
+#       UI.message("Export compliance settings updated successfully.")
+#     else
+#       UI.error("App not found. Please check the app identifier.")
+#     end
+#   end
+
+#   # Create App Identifier (App ID) in App Store Connect
+#   desc "Create App Identifier (App ID) in App Store Connect"
+#   lane :create_app_identifier_and_add_app_to_connect do
+#     produce(
+#       app_identifier: "com.dhuntleyinc.baseafmapp",
+#       app_name: "AFM Base",
+#       sku: "baseafmapp001",
+#       platform: "ios",
+#       language: "English",
+#       team_id: ENV['APPLE_TEAM_ID'],
+#       username: ENV['FASTLANE_USER'],
+#       skip_itc: false,
+#       skip_devcenter: false
+#     )
+#   end
+
+
+#   # Sync certificates and profiles for App Store
+#   desc "Sync certificates and profiles for App Store"
+#   lane :sync_certificates_and_profiles do
+#     match(
+#       type: "appstore",
+#       readonly: true,
+#       force_for_new_devices: false,
+#       skip_provisioning_profiles: false
+#     )
+#   end
+
+#   # # Submit App to the App Store using EAS Submit
+#   desc "Submit to App Store"
+#   lane :submit_to_app_store do
+#     sh("eas submit -p ios --non-interactive --profile production --latest")
+#   end
+
+#   # Main deployment lane
+#   desc "Deploy the app using EAS and Fastlane"
+#   lane :update do
+#     UI.message("Starting deployment process...")
+
+#     create_app_identifier_and_add_app_to_connect
+#     # update_info_plist_now
+#     # sync_certificates_and_profiles
+
+#     UI.message("App identifier created and app added to App Store Connect.")
+    
+#     # submit_to_app_store
+
+#     UI.message("Deployment complete. Check App Store Connect for processing status.")
+#   end
+# end
+
+

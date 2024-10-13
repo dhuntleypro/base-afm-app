@@ -1,0 +1,13 @@
+app_identifier(ENV['APP_IDENTIFIER'])
+apple_id(ENV['APPLE_ID'])
+
+# itc_team_id(ENV["YOUR_CONNECT_TEAM_ID"])
+
+team_id(ENV["APPLE_TEAM_ID"]) # Replace with your Apple Developer Team ID
+ 
+# app_platform("ios")
+
+
+# Specify paths explicitly if needed
+# workspace("ios/baseafmapp.xcworkspace")
+scheme("baseafmapp")
