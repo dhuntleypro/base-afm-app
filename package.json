@@ -12,9 +12,9 @@
     "lint": "expo lint",
     "library": "npm install @dhuntleypro/afm-library@latest",
     "create": "fastlane ios create_app_identifier_and_add_app_to_connect",
-    "build": "npx eas build -p ios --clear-cache --profile production --auto-submit",
+    "update": "npx eas build -p ios --clear-cache --profile production --auto-submit",
     "submit": "npx eas submit -p ios --latest",
-    "publish": "npm run create && npm run build"
+    "publish": "npm run create && npm run update"
   },
   "jest": {
     "preset": "jest-expo"
